@@ -1,0 +1,35 @@
+name: Linux CI (gcc & clang)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    env:
+      CC: ${{ matrix.compiler == 'gcc' && 'gcc' || 'clang' }}
+      CXX: ${{ matrix.compiler == 'gcc' && 'g++' || 'clang++' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake build-essential
+      - name: Configure
+        run: cmake -H. -B_build -DCMAKE_INSTALL_PREFIX=install
+      - name: Build formatter_lib
+        run: cmake --build _build --target formatter
+      - name: Build formatter_ex
+        run: cmake --build _build --target formatter_ex
+      - name: Build solver_lib
+        run: cmake --build _build --target solver_lib
+      - name: Build hello_world
+        run: cmake --build _build --target hello_world
+      - name: Build solver
+        run: cmake --build _build --target solver
+      - name: Install
+        run: cmake --build _build --target install

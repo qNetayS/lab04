@@ -1,0 +1,8 @@
+build/
+_build/
+install/
+*.o
+*.a
+*.so
+*.exe
+*.out
