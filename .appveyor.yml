@@ -1,0 +1,19 @@
+image: Visual Studio 2022
+
+environment:
+  matrix:
+    - GENERATOR: "Visual Studio 17 2022"
+      PLATFORM: x64
+      CONFIGURATION: Debug
+    - GENERATOR: "Visual Studio 17 2022"
+      PLATFORM: x64
+      CONFIGURATION: Release
+
+build_script:
+  - mkdir build
+  - cd build
+  - cmake -G "%GENERATOR%" -A %PLATFORM% ..
+  - cmake --build . --config %CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION% --target install
+
+test: off
